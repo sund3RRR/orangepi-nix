@@ -10,6 +10,7 @@
     rev =  "120202c675749c5ef81ae4c8cdc30019b4de08f4";
     hash = "sha256-4eZHMiYS+sRDHNBtLZTA8ELZnLns7yT3USU5YQswxQ0=";
   };
+  rootPartitionUUID = "14e19a7b-0ae0-484d-9d54-43bd6fdc20c7";
 in {
   boot = {
     kernelPackages = pkgs.linuxPackagesFor (pkgs.callPackage ./pkgs/kernel/legacy.nix {});
@@ -137,10 +138,10 @@ in {
           '';
         }
       ];
+    };
   };
-
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/14e19a7b-0ae0-484d-9d54-43bd6fdc20c7";
+    device = "/dev/disk/by-uuid/${rootPartitionUUID}";
     fsType = "ext4";
   };
   swapDevices = [ ];
