@@ -46,7 +46,7 @@ in {
     };
 
     initrd.includeDefaultModules = lib.mkForce false;
-    initrd.availableKernelModules = lib.mkForce ["dm_mod" "dm_crypt" "encrypted_keys"];
+    initrd.availableKernelModules = lib.mkForce [ "dm_mod" "dm_crypt" "encrypted_keys" "nvme" "usbhid" ];
   };
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
@@ -138,4 +138,10 @@ in {
         }
       ];
   };
+
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/14e19a7b-0ae0-484d-9d54-43bd6fdc20c7";
+    fsType = "ext4";
+  };
+  swapDevices = [ ];
 }
