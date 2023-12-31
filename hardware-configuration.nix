@@ -30,6 +30,7 @@ in {
       "root=UUID=${rootPartitionUUID}"
       "rootwait"
       "rootfstype=ext4"
+      "loglevel=4"
 
       "earlycon" # enable early console, so we can see the boot messages via serial port / HDMI
       "consoleblank=0" # disable console blanking(screen saver)
@@ -84,73 +85,24 @@ in {
       extraPackages = [ rk-valhal ];
     };
 
-    enableRedistributableFirmware = lib.mkForce true;
     firmware = [
       # firmware for Mali-G610 GPU
       (pkgs.callPackage ./pkgs/firmware {})
     ];
-
+    pulseaudio.enable = true;
     # add some missing deviceTree in armbian/linux-rockchip:
     # orange pi 5's deviceTree in armbian/linux-rockchip:
     # https://github.com/armbian/linux-rockchip/blob/rk-5.10-rkr4/arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dts
-    deviceTree = {
-      name = "rockchip/rk3588s-orangepi-5.dtb";
-      overlays = [
-        {
-          # enable pcie2x1l2 (NVMe), disable sata0
-          name = "orangepi5-sata-overlay";
-          dtsText = ''
-            // Orange Pi 5 Pcie M.2 to sata
-            /dts-v1/;
-            /plugin/;
-
-            / {
-              compatible = "rockchip,rk3588s-orangepi-5";
-
-              fragment@0 {
-                target = <&sata0>;
-
-                __overlay__ {
-                  status = "disabled";
-                };
-              };
-
-              fragment@1 {
-                target = <&pcie2x1l2>;
-
-                __overlay__ {
-                  status = "okay";
-                };
-              };
-            };
-          '';
-        }
-
-        # enable i2c1
-        {
-          name = "orangepi5-i2c-overlay";
-          dtsText = ''
-            /dts-v1/;
-            /plugin/;
-
-            / {
-              compatible = "rockchip,rk3588s-orangepi-5";
-
-              fragment@0 {
-                target = <&i2c1>;
-
-                __overlay__ {
-                  status = "okay";
-                  pinctrl-names = "default";
-                  pinctrl-0 = <&i2c1m2_xfer>;
-                };
-              };
-            };
-          '';
-        }
-      ];
-    };
+     deviceTree = { name = "rockchip/rk3588s-orangepi-5b.dtb"; };
   };
+
+  environment.loginShellInit = ''
+	  export GDK_BACKEND=wayland
+    export MOZ_ENABLE_WAYLAND=1
+	  export QT_QPA_PLATFORM=wayland
+	  export XDG_SESSION_TYPE=wayland
+  '';
+
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/${rootPartitionUUID}";
     fsType = "ext4";
