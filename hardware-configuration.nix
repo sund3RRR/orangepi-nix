@@ -24,7 +24,7 @@
   '';
 in {
   boot = {
-    kernelPackages = pkgs.linuxPackagesFor (pkgs.callPackage ./pkgs/kernel/legacy.nix {});
+    kernelPackages = pkgs.linuxPackagesFor (pkgs.callPackage ./pkgs/kernel {});
 
     # kernelParams copy from Armbian's /boot/armbianEnv.txt & /boot/boot.cmd
     kernelParams = [
@@ -88,7 +88,7 @@ in {
     enableRedistributableFirmware = lib.mkForce true;
     firmware = [
       # firmware for Mali-G610 GPU
-      (pkgs.callPackage ./pkgs/mali-firmware {})
+      (pkgs.callPackage ./pkgs/firmware {})
     ];
 
     # add some missing deviceTree in armbian/linux-rockchip:

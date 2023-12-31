@@ -9,10 +9,11 @@ in {
 
   services.xserver = {
     enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
+    displayManager.sddm.enable = true;
+    desktopManager.plasma5.enable = true;
+    displayManager.defaultSession = "plasmawayland";
   };
-  
+
   nix.settings = {
     experimental-features = ["nix-command" "flakes"];
   };
