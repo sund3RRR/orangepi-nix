@@ -1,4 +1,4 @@
-{ src
+{ fetchFromGitHub
 , linuxManualConfig
 , ubootTools
 , ...
@@ -7,7 +7,12 @@
   version = "5.10.160-rockchip-rk3588";
   modDirVersion = "5.10.160";
 
-  inherit src;
+  src = fetchFromGitHub {
+    owner = "armbian";
+    repo = "linux-rockchip";
+    rev = "c2e9a95ab59937a5f0aad0ac6e12fe81f26ea2e0";
+    hash = "";
+  }
 
   configfile = ./orangepi5_config;
 
