@@ -11,6 +11,17 @@
     hash = "sha256-4eZHMiYS+sRDHNBtLZTA8ELZnLns7yT3USU5YQswxQ0=";
   };
   rootPartitionUUID = "14e19a7b-0ae0-484d-9d54-43bd6fdc20c7";
+  rk-valhal = pkgs.runCommand "" {
+    src = pkgs.fetchurl {
+      url = "https://github.com/JeffyCN/mirrors/raw/libmali/lib/aarch64-linux-gnu/libmali-valhall-g610-g6p0-x11-wayland-gbm.so";
+      sha256 = "0yzwlc1mm7adqv804jqm2ikkn1ji0pv1fpxjb9xxw69r2wbmlhkl";
+    };
+  } ''
+    mkdir $out/lib -p
+    cp $src $out/lib/libmali.so.1
+    ln -s libmali.so.1 $out/lib/libmali-valhall-g610-g6p0-x11-wayland-gbm.so
+    for l in libEGL.so libEGL.so.1 libgbm.so.1 libGLESv2.so libGLESv2.so.2 libOpenCL.so.1; do ln -s libmali.so.1 $out/lib/$l; done
+  '';
 in {
   boot = {
     kernelPackages = pkgs.linuxPackagesFor (pkgs.callPackage ./pkgs/kernel/legacy.nix {});
@@ -71,6 +82,7 @@ in {
           })
         )
         .drivers;
+      extraPackages = [ rk-valhal ];
     };
 
     enableRedistributableFirmware = lib.mkForce true;
