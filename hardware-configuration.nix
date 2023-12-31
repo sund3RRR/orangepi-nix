@@ -1,10 +1,9 @@
 {
   lib,
   pkgs,
-  fetchFromGitLab,
   ...
 }: let
-  mesa-panfork = fetchFromGitLab {
+  mesa-panfork = pkgs.fetchFromGitLab {
     owner = "panfork";
     repo = "mesa";
     rev =  "120202c675749c5ef81ae4c8cdc30019b4de08f4";
@@ -67,7 +66,7 @@ in {
     # driver & firmware for Mali-G610 GPU
     # it works on all rk2588/rk3588s based SBCs.
     opengl = {
-      enable = lib.mkDefault true;
+      enable = true;
       package =
         lib.mkForce
         (
